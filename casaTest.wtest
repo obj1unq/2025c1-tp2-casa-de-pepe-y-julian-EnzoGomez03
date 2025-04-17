@@ -1,0 +1,61 @@
+import cosas.*
+import casa.*
+
+describe "casa De Pepe Y Julian" {
+  test "Compras para la casa de Pepe Y Julian" {
+
+    casaDePepeYJulian.comprar(heladera)
+    casaDePepeYJulian.comprar(cama)
+    casaDePepeYJulian.comprar(plancha)
+    assert.equals([heladera,cama,plancha], casaDePepeYJulian.cosas())
+
+//- cantidad de cosas compradas es 3
+    assert.equals(3, casaDePepeYJulian.cantCosasCompradas())
+//- tiene algún electrodoméstico
+    assert.that(casaDePepeYJulian.tieneAlgun(electrodomestico))
+//- tiene algún mueble
+    assert.that(casaDePepeYJulian.tieneAlgun(mueble))
+//- no tiene alguna comida
+    assert.notThat(casaDePepeYJulian.tieneAlgun(comida))
+//- Si le preguntan si viene de comprar un electrodoméstico dice que sí, pero si le preguntan si viene de comprar un mueble dice que no
+    assert.that(casaDePepeYJulian.vieneDeComprar(electrodomestico))
+    assert.notThat(casaDePepeYJulian.vieneDeComprar(mueble))
+//- Es derrochona (ya que gastó 29200)
+    assert.that(casaDePepeYJulian.esDerrochona())
+//- no hay comida comprada
+    assert.notThat(casaDePepeYJulian.tieneAlgun(comida))
+//- no es una mala época
+    assert.notThat(casaDePepeYJulian.malaEpoca())
+
+//- falta comida
+
+    
+//- las categorías compradas son electrodoméstico y mueble
+  }
+
+  test "Los electrodomesticos comprados son la heladera y la plancha" {
+    //- los electrodomésticos compramos son la heladera y la plancha
+    casaDePepeYJulian.comprar(heladera)
+    casaDePepeYJulian.comprar(plancha)
+    assert.equals([heladera,plancha], casaDePepeYJulian.cosas())
+  }
+
+  test "Los muebles comprados son : cama y nada mas" {
+    //- los muebles comprados son: la cama y nada más
+    casaDePepeYJulian.comprar(cama)
+    assert.equals([cama], casaDePepeYJulian.cosas())
+  }
+
+  test "Es una mala epoca"{
+    casaDePepeYJulian.comprar(tiraDeAsado)
+    casaDePepeYJulian.comprar(paqueteDeFideos)
+    //casaDePepeYJulian.comprar(cama) con esto falla, porque entonces NO seria mala epoca.
+    assert.that(casaDePepeYJulian.malaEpoca())
+  }
+
+  test "Falta comprar una tira de asado, y el paquete de fideos" {
+    //- si le preguntamos que falta comprar de una tira de asado, una plancha y un paquete de fideos debe contestar que falta la tira de asado y el paquete de fideos.
+    casaDePepeYJulian.comprar(plancha)
+    assert.equals([tiraDeAsado,paqueteDeFideos], casaDePepeYJulian.queFaltaComprar([tiraDeAsado,plancha,paqueteDeFideos]))
+  }
+}
