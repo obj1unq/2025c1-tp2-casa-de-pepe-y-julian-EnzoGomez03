@@ -30,7 +30,6 @@ describe "casa De Pepe Y Julian" {
 
 //- falta comida
     assert.that(casaDePepeYJulian.faltaComida())
-//- las categorías compradas son electrodoméstico y mueble
   }
 
   test "Los electrodomesticos comprados son la heladera y la plancha" {
