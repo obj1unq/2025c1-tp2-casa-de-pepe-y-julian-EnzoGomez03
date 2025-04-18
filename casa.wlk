@@ -5,6 +5,7 @@ object casaDePepeYJulian {
 
     method comprar(cosa){
         cosas.add(cosa)
+        //self.extraer(cosa.precio())
     }
 
     method cantCosasCompradas(){
@@ -35,4 +36,22 @@ object casaDePepeYJulian {
     method queFaltaComprar(lista){
         return lista.filter({cosa =>  not cosas.contains(cosa)})
     }
+
+    method faltaComida(){
+        return self.cantidadDeComida() < 2    
+    }
+
+    method cantidadDeComida(){
+        return cosas.count({cosa => cosa.categoria().esComestible()})
+    }
+
+    method categoriasCompradas(){
+       return  cosas.map({cosa => cosa.categoria()})
+    }
+    
+    method extraer(cuenta,cosa){
+        cuenta.extraer(cosa.precio())
+    }
+    
+  
 }

@@ -1,3 +1,4 @@
+import cuentas.*
 import cosas.*
 import casa.*
 
@@ -28,8 +29,7 @@ describe "casa De Pepe Y Julian" {
     assert.notThat(casaDePepeYJulian.malaEpoca())
 
 //- falta comida
-
-    
+    assert.that(casaDePepeYJulian.faltaComida())
 //- las categorías compradas son electrodoméstico y mueble
   }
 
@@ -57,5 +57,68 @@ describe "casa De Pepe Y Julian" {
     //- si le preguntamos que falta comprar de una tira de asado, una plancha y un paquete de fideos debe contestar que falta la tira de asado y el paquete de fideos.
     casaDePepeYJulian.comprar(plancha)
     assert.equals([tiraDeAsado,paqueteDeFideos], casaDePepeYJulian.queFaltaComprar([tiraDeAsado,plancha,paqueteDeFideos]))
+  }
+
+  test "No falta comida" {
+    casaDePepeYJulian.comprar(paqueteDeFideos)
+    casaDePepeYJulian.comprar(tiraDeAsado)
+    assert.notThat(casaDePepeYJulian.faltaComida())
+  }
+
+  test "Todo lo comprado son electrodomesticos, y muebles" {
+    casaDePepeYJulian.comprar(plancha)
+    casaDePepeYJulian.comprar(cama)
+    assert.equals([electrodomestico,mueble], casaDePepeYJulian.categoriasCompradas())
+    //- las categorías compradas son electrodoméstico y mueble
+  }
+
+
+  test "Compraron electrodomesticos, muebles y comida" {
+    casaDePepeYJulian.comprar(plancha)
+    casaDePepeYJulian.comprar(cama)
+    casaDePepeYJulian.comprar(tiraDeAsado)
+    assert.equals([electrodomestico,mueble,comida], casaDePepeYJulian.categoriasCompradas())
+    
+  }
+}
+
+describe "cuentas Bancarias" {
+  test "Cuenta corriente" {
+    //**Caso de Prueba**: si la cuenta tiene 20 de saldo, si se deposita 1000 pesos, el saldo queda en 1020 pesos, si luego se extre 50 queda en 970 pesos. Si se intenta extraer 2000 debería lanzar error ya que no se puede cumplir la responsabilidad.
+  
+    cuentaCorriente.saldo(20)
+    cuentaCorriente.depositar(1000)
+    assert.equals(1020, cuentaCorriente.saldo())
+    cuentaCorriente.extraer(50)
+    assert.equals(970, cuentaCorriente.saldo())
+    assert.throwsException({ cuentaCorriente.extraer(2000) })
+  }
+
+  test "Cuenta con gastos" {
+    //**Caso de Prueba**: para una cuenta con un saldo de 500 pesos y 20 pesos de costo por operación, si se deposita 1000 pesos, el saldo queda en 1480 pesos. Si luego se extrae 30, queda en 1450. Después se eso se intenta depositar 2000, pero no se puede porque violaría la regla de negocio, por lo que hay que verificar que se lance el error y que el saldo siga siendo de 1450. Finalmente se extren 2000 pesos dejando el saldo en -550.
+    cuentaConGastos.saldo(500)
+    assert.equals(500, cuentaConGastos.saldo())
+    cuentaConGastos.costoOperacion(20)
+    cuentaConGastos.depositar(1000)
+    assert.equals(1480, cuentaConGastos.saldo())
+    cuentaConGastos.extraer(30)
+    assert.equals(1450, cuentaConGastos.saldo())
+    assert.throwsException({ cuentaConGastos.depositar(2000) })
+    cuentaConGastos.extraer(2000)
+    assert.equals(-550, cuentaConGastos.saldo())
+  }
+}
+
+describe "Comprando con las cuentas" {
+  test "Compra usando alguna cuenta bancaria de la casa" {
+    //Ejemplo: Si la casa tiene configurada una cuenta corriente con saldo 1000, se compra una tira de asado y un paquete de fideos, entonces la cuenta corriente queda con saldo 600.
+
+    cuentaCorriente.saldo(1000)
+    assert.equals(1000, cuentaCorriente.saldo())
+    casaDePepeYJulian.comprar(tiraDeAsado)
+    casaDePepeYJulian.comprar(paqueteDeFideos)
+    casaDePepeYJulian.extraer(cuentaCorriente, tiraDeAsado)
+    casaDePepeYJulian.extraer(cuentaCorriente, paqueteDeFideos)
+    assert.equals(600, cuentaCorriente.saldo())
   }
 }
